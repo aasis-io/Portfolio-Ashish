@@ -20,7 +20,7 @@ export function About() {
         </ScrollAnimation>
         <ScrollAnimation animateIn="fadeInLeft" delay={0.1 * 1000}>
           <p>
-            Hi there! I'm Ashish, a website developer with a passion for creating custom online experiences for my clients. With a skill set including HTML, CSS, JavaScript, PHP, React JS, and Tailwind CSS, I have the tools to bring any website vision to life.
+            Hi there! I'm Ashish, a website developer with a passion for creating custom online experiences for my clients. With a skill set including HTML, CSS, JavaScript, PHP, Figma, React JS and Tailwind CSS, I have the tools to bring any website vision to life.
           </p>
         </ScrollAnimation>
         <ScrollAnimation animateIn="fadeInLeft" delay={0.2 * 1000} style={{ marginTop: "2rem", marginBottom: "2rem" }}>
