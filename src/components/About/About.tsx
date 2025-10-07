@@ -1,15 +1,15 @@
-import { Container } from "./styles";
-import AshishThapa from "../../assets/AshishThapa.png";
-import htmlIcon from "../../assets/html-icon.svg";
-import tailwindIcon from "../../assets/tailwind.svg";
+import AshishThapa from "../../assets/ashish.png";
 import cssIcon from "../../assets/css-icon.svg";
-import jsIcon from "../../assets/js-icon.svg";
-import reactIcon from "../../assets/react-icon.svg";
 import figmaIcon from "../../assets/figma.svg";
+import htmlIcon from "../../assets/html-icon.svg";
+import jsIcon from "../../assets/js-icon.svg";
 import phpIcon from "../../assets/php.svg";
+import reactIcon from "../../assets/react-icon.svg";
+import tailwindIcon from "../../assets/tailwind.svg";
+import { Container } from "./styles";
 
-import boostrapIcon from "../../assets/bootstrap-icon.svg";
 import ScrollAnimation from "react-animate-on-scroll";
+import boostrapIcon from "../../assets/bootstrap-icon.svg";
 
 export function About() {
   return (
