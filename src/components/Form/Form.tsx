@@ -1,12 +1,14 @@
-import { Container, ContainerSucces } from './styles'
-import { useForm, ValidationError } from '@formspree/react'
-import { toast, ToastContainer } from 'react-toastify'
+import { ValidationError, useForm } from '@formspree/react'
 import { useEffect, useState } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { ToastContainer, toast } from 'react-toastify'
 import validator from 'validator'
+import { Container, ContainerSucces } from './styles'
 
 export function Form() {
-  const [state, handleSubmit] = useForm('mrbglbwr')
+  const [state, handleSubmit] = useForm('xknkpqry')
   const [validEmail, setValidEmail] = useState(false)
+  const [isHuman, setIsHuman] = useState(false)
   const [message, setMessage] = useState('')
   function verifyEmail(email: string) {
     if (validator.isEmail(email)) {
@@ -18,7 +20,7 @@ export function Form() {
   useEffect(() => {
     if (state.succeeded) {
       toast.success('Email successfully sent!', {
-        position: toast.POSITION.BOTTOM_LEFT,
+        position: "bottom-left",
         pauseOnFocusLoss: false,
         closeOnClick: true,
         hideProgressBar: false,
@@ -70,9 +72,15 @@ export function Form() {
           field="message"
           errors={state.errors}
         />
+        <ReCAPTCHA
+          sitekey="6Lfj9NYfAAAAAP8wPLtzrsSZeACIcGgwuEIRvbSg"
+          onChange={(e) => {
+            setIsHuman(true)
+          }}
+        ></ReCAPTCHA>
         <button
           type="submit"
-          disabled={state.submitting || !validEmail || !message}
+          disabled={state.submitting || !validEmail || !message || !isHuman}
         >
           Submit
         </button>
