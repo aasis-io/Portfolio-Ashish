@@ -3,8 +3,25 @@ import { useState } from 'react';
 
 const AcceleratedContentPlan = () => {
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
-  const [showImplementation, setShowImplementation] = useState(false);
+  const [expandedWeeks, setExpandedWeeks] = useState<number[]>([]);
+  
+  // Tracks status of each week: "ongoing" or "completed"
+  const [weekStatus, setWeekStatus] = useState<Record<number, "ongoing" | "completed">>({});
 
+  const toggleWeek = (weekNum: number) => {
+    setExpandedWeeks((prev) =>
+      prev.includes(weekNum)
+        ? prev.filter((w) => w !== weekNum)
+        : [...prev, weekNum]
+    );
+  };
+
+  const toggleWeekStatus = (weekNum: number) => {
+    setWeekStatus((prev) => ({
+      ...prev,
+      [weekNum]: prev[weekNum] === "completed" ? "ongoing" : "completed",
+    }));
+  };
   const weeks = [
     {
       week: 1,
@@ -347,186 +364,194 @@ const AcceleratedContentPlan = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 pt-64">
-      <div className="max-w-[1320px] mx-auto">
-        
+    <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-28 px-6 pt-48">
+      <div className="max-w-[1320px] mx-auto space-y-20">
+  
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-2xl p-8 mb-8 text-white">
-          <div className="flex items-center gap-3 mb-3">
-            <Zap className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">
-              ACCELERATED 8-Week Content Strategy
+        <div className="bg-gradient-to-l from-blue-700 via-indigo-600 to-indigo-700 rounded-3xl shadow-2xl p-12 text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_left,_#fff,_transparent_70%)]"></div>
+          <div className="flex items-center gap-5 mb-8 relative z-10">
+            <Zap className="w-14 h-14 text-yellow-300" />
+            <h1 className="text-4xl font-extrabold tracking-tight leading-tight">
+              8-Week Content Strategy
             </h1>
           </div>
-          <p className="text-3xl text-blue-100 mb-6">
+          <p className="text-2xl text-blue-100 mb-10 max-w-3xl relative z-10">
             From 200 to 3,000+ monthly visitors (realistic 12-week projection)
           </p>
-          
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-              <div className="text-4xl font-bold">{quickStats.totalPosts}</div>
-              <div className="text-3xl text-blue-100">Strategic Posts</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-              <div className="text-4xl font-bold">{quickStats.avgTimeToRank}</div>
-              <div className="text-3xl text-blue-100">Avg Time to Rank</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-              <div className="text-4xl font-bold">{quickStats.targetTraffic}</div>
-              <div className="text-3xl text-blue-100">Traffic Goal (Mo 4)</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-              <div className="text-4xl font-bold">{quickStats.conversionRate}</div>
-              <div className="text-3xl text-blue-100">Lead Conversion</div>
-            </div>
+  
+          <div className="grid md:grid-cols-4 gap-6 relative z-10">
+            {[
+              { label: "Strategic Posts", value: quickStats.totalPosts, color: "blue" },
+              { label: "Avg Time to Rank", value: quickStats.avgTimeToRank, color: "blue" },
+              { label: "Traffic Goal (Mo 4)", value: quickStats.targetTraffic, color: "blue" },
+              { label: "Lead Conversion", value: quickStats.conversionRate, color: "blue" },
+            ].map((stat, idx) => (
+              <div
+                key={idx}
+                className="bg-white/15 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/25 transition-all duration-200 shadow-md"
+              >
+                <div className="text-4xl  font-bold mb-2">{stat.value}</div>
+                <div className="text-xl text-blue-100">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
-
+  
         {/* Strategy Note */}
-        <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-6 mb-8">
-          <div className="flex items-start gap-3">
-            <Award className="w-6 h-6 text-amber-600 mt-1" />
+        <div className="bg-gradient-to-l from-amber-50 to-yellow-50 border-l-8 border-amber-500 rounded-3xl p-10 shadow-md">
+          <div className="flex items-start gap-5">
+            <Award className="w-8 h-8 text-amber-600 mt-1" />
             <div>
-              <h3 className="font-bold text-amber-900 mb-2 text-3xl">Why This Plan Works for YOU</h3>
-              <p className="text-amber-800 text-3xl mb-2">
-                You already have 200 visitors = Google trusts your domain. This plan leverages your existing authority 
+              <h3 className="font-bold text-amber-900 text-4xl mb-4">Why This Plan Works for YOU</h3>
+              <p className="text-2xl text-amber-800 mb-3 leading-relaxed">
+                You already have 200 visitors = Google trusts your domain. This plan leverages your existing authority
                 with <strong>low-competition, high-intent keywords</strong> that competitors ignore.
               </p>
-              <p className="text-amber-800 text-3xl">
-                Focus: Quick wins (Weeks 1-2) then Traffic builders (Weeks 3-5) then Authority content (Weeks 6-8)
+              <p className="text-2xl text-amber-800 leading-relaxed">
+                Focus: Quick wins (Weeks 1–2), Traffic builders (Weeks 3–5), Authority content (Weeks 6–8)
               </p>
             </div>
           </div>
         </div>
-
+  
         {/* Weekly Content */}
-        <div className="space-y-4">
+        <div className="space-y-10">
           {weeks.map((week) => (
-            <div 
+            <div
               key={week.week}
-              className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-blue-300 transition-all"
+              className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300"
             >
               {/* Week Header */}
-              <div 
-                className={`p-6 cursor-pointer ${
-                  week.priority === 'URGENT' ? 'bg-gradient-to-r from-red-500 to-red-600' :
-                  week.priority === 'HIGH' ? 'bg-gradient-to-r from-orange-500 to-orange-600' :
-                  'bg-gradient-to-r from-blue-500 to-blue-600'
+              <div
+                className={`p-8 cursor-pointer transition-all duration-300 ${
+                  week.priority === "URGENT"
+                    ? "bg-gradient-to-l from-red-500 to-red-600"
+                    : week.priority === "HIGH"
+                    ? "bg-gradient-to-l from-orange-500 to-orange-600"
+                    : "bg-gradient-to-l from-blue-500 to-indigo-600"
                 } text-white`}
                 onClick={() => setSelectedWeek(selectedWeek === week.week ? null : week.week)}
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-bold">
+                    <div className="flex items-center gap-4 mb-2">
+                      <span className="px-4 py-1 rounded-full bg-white/20 text-sm font-semibold tracking-wide">
                         {week.priority}
                       </span>
                       <h2 className="text-3xl font-bold">Week {week.week}</h2>
                     </div>
-                    <p className="text-3xl opacity-90">{week.theme}</p>
-                    <p className="text-3xl opacity-75 mt-2">
-                      {week.posts.length} post{week.posts.length > 1 ? 's' : ''} - Click to {selectedWeek === week.week ? 'collapse' : 'see details'}
+                    <p className="text-xl md:text-2xl opacity-90">{week.theme}</p>
+                    <p className="text-lg md:text-xl opacity-70 mt-2">
+                      {week.posts.length} post{week.posts.length > 1 ? "s" : ""} — Click to{" "}
+                      {selectedWeek === week.week ? "collapse" : "see details"}
                     </p>
                   </div>
-                  <div className="text-5xl font-light">
-                    {selectedWeek === week.week ? '−' : '+'}
-                  </div>
+                  <div className="text-5xl font-light">{selectedWeek === week.week ? "−" : "+"}</div>
                 </div>
               </div>
-
+  
               {/* Expanded Content */}
               {selectedWeek === week.week && (
-                <div className="p-6 space-y-6 bg-gray-50">
+                <div className="p-8 space-y-8 bg-gray-50">
                   {week.posts.map((post, idx) => (
-                    <div 
+                    <div
                       key={idx}
-                      className="bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm"
+                      className="bg-white rounded-2xl p-8 border shadow-sm space-y-6 hover:shadow-md transition-all"
                     >
-                      {/* Post Title */}
-                      <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                        {post.title}
-                      </h3>
+                      <h3 className="text-3xl md:text-4xl font-bold text-gray-900">{post.title}</h3>
+  
+                      {/* Metrics */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+  {[
+    { label: "Search Volume", value: post.searchVolume, bg: "green" },
+    { label: "Competition", value: post.competition, bg: "blue" },
+    { label: "Time to Rank", value: post.timeToRank, bg: "purple" },
+    { label: "Traffic", value: post.traffic, bg: "orange" },
+  ].map((metric, mIdx) => {
+    const colors: Record<string, { bg: string; border: string; textLabel: string; textValue: string }> = {
+      green: { bg: "bg-green-50", border: "border-green-100", textLabel: "text-green-600", textValue: "text-green-800" },
+      blue: { bg: "bg-blue-50", border: "border-blue-100", textLabel: "text-blue-600", textValue: "text-blue-800" },
+      purple: { bg: "bg-purple-50", border: "border-purple-100", textLabel: "text-purple-600", textValue: "text-purple-800" },
+      orange: { bg: "bg-orange-50", border: "border-orange-100", textLabel: "text-orange-600", textValue: "text-orange-800" },
+    };
+    const color = colors[metric.bg];
 
-                      {/* Metrics Row */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                        <div className="bg-green-50 rounded-lg p-3 text-center">
-                          <div className="text-sm text-green-600 mb-1">Search Volume</div>
-                          <div className="font-bold text-green-700">{post.searchVolume}</div>
-                        </div>
-                        <div className="bg-blue-50 rounded-lg p-3 text-center">
-                          <div className="text-sm text-blue-600 mb-1">Competition</div>
-                          <div className="font-bold text-blue-700">{post.competition}</div>
-                        </div>
-                        <div className="bg-purple-50 rounded-lg p-3 text-center">
-                          <div className="text-sm text-purple-600 mb-1">Time to Rank</div>
-                          <div className="font-bold text-purple-700">{post.timeToRank}</div>
-                        </div>
-                        <div className="bg-orange-50 rounded-lg p-3 text-center">
-                          <div className="text-sm text-orange-600 mb-1">Traffic</div>
-                          <div className="font-bold text-orange-700">{post.traffic}</div>
-                        </div>
-                      </div>
+    return (
+      <div
+        key={mIdx}
+        className={`rounded-lg p-4 text-center ${color.bg} border ${color.border}`}
+      >
+        <div className={`text-base font-medium mb-1 ${color.textLabel}`}>
+          {metric.label}
+        </div>
+        <div className={`font-bold text-xl ${color.textValue}`}>
+          {metric.value}
+        </div>
+      </div>
+    );
+  })}
+</div>
 
+  
                       {/* Why It Works */}
-                      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-                        <div className="font-semibold text-blue-900 text-3xl mb-1">
+                      <div className="bg-blue-50 border-l-4 border-blue-400 p-5 rounded-lg">
+                        <h4 className="text-2xl md:text-3xl font-semibold text-blue-900 mb-2">
                           Why This Works:
-                        </div>
-                        <p className="text-blue-800 text-3xl">{post.whyItWorks}</p>
+                        </h4>
+                        <p className="text-xl md:text-2xl text-blue-800 leading-relaxed">
+                          {post.whyItWorks}
+                        </p>
                       </div>
-
-                      {/* Details Grid */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {/* Left Column */}
-                        <div className="space-y-3">
+  
+                      {/* Details */}
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div className="space-y-5">
                           <div>
-                            <div className="text-3xl font-semibold text-gray-700 mb-2">
+                            <h5 className="text-xl md:text-2xl font-semibold text-gray-700 mb-2">
                               Target Keywords:
-                            </div>
+                            </h5>
                             <div className="flex flex-wrap gap-2">
                               {post.keywords.map((kw, i) => (
-                                <span 
+                                <span
                                   key={i}
-                                  className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-sm"
+                                  className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-base"
                                 >
                                   {kw}
                                 </span>
                               ))}
                             </div>
                           </div>
-
                           <div>
-                            <div className="text-3xl font-semibold text-gray-700 mb-1">
+                            <h5 className="text-xl md:text-2xl font-semibold text-gray-700 mb-1">
                               Format:
-                            </div>
-                            <p className="text-3xl text-gray-600">{post.format}</p>
+                            </h5>
+                            <p className="text-lg md:text-xl text-gray-600">{post.format}</p>
                           </div>
-
                           <div>
-                            <div className="text-3xl font-semibold text-gray-700 mb-1">
+                            <h5 className="text-xl md:text-2xl font-semibold text-gray-700 mb-1">
                               Internal Links:
-                            </div>
-                            <p className="text-3xl text-gray-600">{post.internalLinks}</p>
+                            </h5>
+                            <p className="text-lg md:text-xl text-gray-600">{post.internalLinks}</p>
                           </div>
-
                           <div>
-                            <div className="text-3xl font-semibold text-gray-700 mb-1">
+                            <h5 className="text-xl md:text-2xl font-semibold text-gray-700 mb-1">
                               CTA:
-                            </div>
-                            <p className="text-3xl font-medium text-blue-600">{post.cta}</p>
+                            </h5>
+                            <p className="text-lg md:text-xl font-medium text-blue-600">{post.cta}</p>
                           </div>
                         </div>
-
-                        {/* Right Column - Outline */}
+  
+                        {/* Outline */}
                         <div>
-                          <div className="text-3xl font-semibold text-gray-700 mb-2">
+                          <h5 className="text-xl md:text-2xl font-semibold text-gray-700 mb-2">
                             Content Outline:
-                          </div>
-                          <ul className="space-y-1">
+                          </h5>
+                          <ul className="space-y-2">
                             {post.outline.map((item, i) => (
-                              <li 
+                              <li
                                 key={i}
-                                className="text-3xl text-gray-600 flex items-start gap-2"
+                                className="text-lg md:text-xl text-gray-600 flex items-start gap-2"
                               >
                                 <span className="text-blue-500 font-bold mt-0.5">•</span>
                                 <span>{item}</span>
@@ -542,79 +567,98 @@ const AcceleratedContentPlan = () => {
             </div>
           ))}
         </div>
-        {/* Implementation Roadmap */}
-<div className="bg-gradient-to-r from-green-50 via-white to-green-100 rounded-2xl shadow-2xl p-8 mt-12">
-  <div className="flex items-center gap-4 mb-6">
-    <TrendingUp className="w-12 h-12 text-green-600" />
-    <h2 className="text-5xl font-bold text-green-800">
-      Implementation Roadmap
-    </h2>
-  </div>
-
-  <p className="text-3xl text-green-900 mb-8">
-    Here’s a week-by-week plan to execute your content strategy efficiently and maximize growth.
-  </p>
-
-  <div className="space-y-6">
-    {weeks.map((week) => (
-      <div key={week.week} className="bg-white rounded-xl p-6 shadow-md border-2 border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-4xl font-bold text-gray-900">
-            Week {week.week}: {week.theme}
-          </h3>
-          <span 
-            className={`px-3 py-1 rounded-full text-white text-3xl font-semibold ${
-              week.priority === "URGENT"
-                ? "bg-red-500"
-                : week.priority === "HIGH"
-                ? "bg-orange-500"
-                : "bg-blue-500"
-            }`}
-          >
-            {week.priority}
-          </span>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Tasks */}
-          <div>
-            <h4 className="text-3xl font-semibold text-gray-700 mb-3">Key Tasks:</h4>
-            <ul className="list-disc list-inside space-y-2 text-3xl text-gray-600">
-              {week.posts.map((post, idx) => (
-                <li key={idx}>
-                  Create & optimize: <strong>{post.title}</strong>
-                </li>
-              ))}
-            </ul>
+  
+  {/*Implementation*/}
+        <div className="bg-gradient-to-r from-green-100 via-green-50 to-white rounded-3xl shadow-2xl p-12">
+          <div className="flex items-center gap-5 mb-8">
+            <TrendingUp className="w-12 h-12 text-green-600" />
+            <h2 className="text-5xl font-bold text-green-800">Implementation Roadmap</h2>
           </div>
+          <p className="text-2xl text-green-900 mb-10 max-w-3xl">
+            Here’s a week-by-week plan to execute your content strategy efficiently and maximize growth.
+          </p>
 
-          {/* Notes & Metrics */}
-          <div>
-            <h4 className="text-3xl font-semibold text-gray-700 mb-3">Notes & Metrics:</h4>
-            <ul className="space-y-2 text-3xl text-gray-600">
-              <li>Focus on <strong>keywords</strong> with low competition first</li>
-              <li>Use internal links to connect similar posts</li>
-              <li>Track search rankings weekly</li>
-              <li>Monitor organic traffic & adjust posting frequency</li>
-              <li>Ensure CTAs are visible on all posts</li>
-            </ul>
+          <div className="space-y-6">
+            {weeks.map((week) => {
+              const isExpanded = expandedWeeks.includes(week.week);
+              const status = weekStatus[week.week] || "ongoing";
+
+              return (
+                <div
+                  key={week.week}
+                  className={`bg-white rounded-2xl shadow-md border hover:shadow-lg transition-all ${status === "completed" ? "opacity-60" : ""
+                    }`}
+                >
+                  {/* Header */}
+                  <div
+                    className="flex items-center justify-between p-6 cursor-pointer"
+                    onClick={() => toggleWeek(week.week)}
+                  >
+                    <h3 className="text-2xl font-bold text-gray-700">
+                      Week {week.week}: {week.theme}
+                    </h3>
+                    <div className="flex items-center gap-4">
+                      <span
+                        className={`px-4 py-1 rounded-full text-white text-lg font-semibold ${week.priority === "URGENT"
+                            ? "bg-red-500"
+                            : week.priority === "HIGH"
+                              ? "bg-orange-500"
+                              : "bg-blue-500"
+                          }`}
+                      >
+                        {week.priority}
+                      </span>
+                      <span className="text-4xl">{isExpanded ? "−" : "+"}</span>
+                    </div>
+                  </div>
+
+                  {/* Collapsible Content */}
+                  {isExpanded && (
+                    <div className="p-6 space-y-6 border-t border-gray-200">
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div>
+                          <h4 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-3">Key Tasks:</h4>
+                          <ul className="list-disc list-inside space-y-2 text-lg md:text-xl text-gray-600">
+                            {week.posts.map((post: any, idx: number) => (
+                              <li key={idx}>
+                                Create & optimize: <strong>{post.title}</strong>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-3">Notes & Metrics:</h4>
+                          <ul className="space-y-2 text-lg md:text-xl text-gray-600">
+                            <li>Focus on <strong>keywords</strong> with low competition first</li>
+                            <li>Use internal links to connect similar posts</li>
+                            <li>Track search rankings weekly</li>
+                            <li>Monitor organic traffic & adjust posting frequency</li>
+                            <li>Ensure CTAs are visible on all posts</li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Toggle Status Button */}
+                      <div className="mt-6 text-center">
+                        <button
+                          className={`px-10 py-4 rounded-xl text-2xl font-semibold shadow-lg transition-all ${status === "completed"
+                              ? "bg-green-600 hover:bg-green-700 text-white"
+                              : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                            }`}
+                          onClick={() => toggleWeekStatus(week.week)}
+                        >
+                          {status === "completed" ? "Completed ✔ (Click to Ongoing)" : "Mark Completed"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
-
-        {/* Optional CTA */}
-        <div className="mt-6 text-center">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-3xl font-semibold shadow-lg transition-all">
-            Mark Week {week.week} Complete
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
       </div>
     </div>
   );
 };
-
 export default AcceleratedContentPlan;
